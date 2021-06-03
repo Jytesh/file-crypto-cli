@@ -1,0 +1,11 @@
+[package]
+name = "file-encrypter"
+version = "0.1.0"
+authors = ["Jytesh <44925963+Jytesh@users.noreply.github.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = "2.33.3"
+openssl = "0.10.32"
