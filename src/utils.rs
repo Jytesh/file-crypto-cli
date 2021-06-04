@@ -22,7 +22,7 @@ pub fn getpass() -> String {
 }
 
 pub fn encrypt(input: String, output: String, password: String) -> Result<(), std::io::Error> {
-    let read_string = fs::read_to_string(input)?;
+    let read_string = fs::read(input)?;
     let ciphertext = crypto::enrypt_string(read_string, password).unwrap();
     write(output, ciphertext)?;
     Ok(())

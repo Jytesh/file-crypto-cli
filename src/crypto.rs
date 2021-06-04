@@ -3,12 +3,12 @@ use orion::aead as crypto;
 use orion::kdf;
 
 pub fn enrypt_string(
-    string: String,
+    string: Vec<u8>,
     password: String,
 ) -> Result<Vec<u8>, orion::errors::UnknownCryptoError> {
     let passphrase = stretch_passphrase(password);
     let ciphertext =
-        crypto::seal(&passphrase.key, &string.as_bytes()).expect("Failed to encrypt text");
+        crypto::seal(&passphrase.key, &string).expect("Failed to encrypt text");
     let cipertext_with_salt = [passphrase.salt.as_ref(), &ciphertext].concat();
     Ok(cipertext_with_salt)
 }
