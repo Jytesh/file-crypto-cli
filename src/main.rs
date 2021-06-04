@@ -1,6 +1,5 @@
-use clap::{App, Arg, SubCommand};
+use clap::{App, Arg};
 
-mod keygen;
 mod utils;
 mod crypto;
 
@@ -31,18 +30,8 @@ fn main() -> Result<(), std::io::Error> {
                         .short("p")
                         .help("Your default password for **ALL** files")
                     )
-                    .subcommand(
-                        SubCommand::with_name("generate-key")
-                        .about("Generate RSA Private and Public Keys")
-                        .version("1.0")
-                        .author("Jytesh")
-                    )
                     .get_matches();
 
-    // Key generation
-    if let Some(_) = matches.subcommand_matches("generate-key") {
-        keygen::keygen();
-    }
     let encrypt = !matches.is_present("decrypt");
     let password = matches.value_of("password");
     let dir = match encrypt {
