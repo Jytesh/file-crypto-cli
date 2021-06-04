@@ -16,13 +16,13 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact_name: file-encrypter
-            asset_name: file-encrypter-$tag-linux
+            asset_name: file-encrypter-linux
           - os: windows-latest
             artifact_name: file-encrypter.exe
-            asset_name: file-encrypter-$tag-windows.exe
+            asset_name: file-encrypter-windows.exe
           - os: macos-latest
             artifact_name: file-encrypter
-            asset_name: file-encrypter-$tag-macos
+            asset_name: file-encrypter-macos
 
     steps:
     - uses: actions/checkout@v2
@@ -34,4 +34,7 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: target/release/${{ matrix.artifact_name }}
         asset_name: ${{ matrix.asset_name }}
+        release_name: "Release"
         tag: ${{ github.ref }}
+        body: "Automatic Release"
+        overwrite: true
