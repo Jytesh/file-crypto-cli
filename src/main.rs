@@ -6,7 +6,7 @@ mod ux;
 
 fn main() -> Result<(), std::io::Error> {
     let matches = App::new("Rust File Crypto")
-                    .version("0.1.1")
+                    .version("0.2.1")
                     .author("Jytesh")
                     .about("Used to encrypt, decrypt files.")
                     .arg(
