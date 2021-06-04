@@ -271,7 +271,6 @@ name = "file-encrypter"
 version = "0.1.0"
 dependencies = [
  "clap",
- "openssl",
  "orion",
  "safe_crypto",
 ]
