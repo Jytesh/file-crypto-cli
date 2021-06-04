@@ -16,13 +16,13 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact_name: file-encrypter
-            asset_name: file-encrypter-linux
+            asset_name: file-encrypter-$tag-linux
           - os: windows-latest
             artifact_name: file-encrypter.exe
-            asset_name: file-encrypter-windows.exe
+            asset_name: file-encrypter-$tag-windows.exe
           - os: macos-latest
             artifact_name: file-encrypter
-            asset_name: file-encrypter-macos
+            asset_name: file-encrypter-$tag-macos
 
     steps:
     - uses: actions/checkout@v2
