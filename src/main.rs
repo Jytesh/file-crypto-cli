@@ -1,34 +1,39 @@
 use clap::{App, Arg};
 
-mod utils;
 mod crypto;
+mod utils;
+mod ux;
 
 fn main() -> Result<(), std::io::Error> {
     let matches = App::new("Rust File Crypto")
-                    .version("1.0")
+                    .version("0.1.1")
                     .author("Jytesh")
-                    .about("Used to encrypt, decrypt files. Also provides RSA Key generation")
+                    .about("Used to encrypt, decrypt files.")
                     .arg(
                         Arg::with_name("input")
                         .short("i")
+                        .long("input")
                         .help("Input file to encrypt or decrypt, will encrypt or decrypt all files in unen/encrypted if not provided")
                         .takes_value(true)
                         )
                     .arg(
                         Arg::with_name("output")
                         .short("o")
+                        .long("output")
                         .help("Output file , will generate from input file if not provided")
+                        .takes_value(true)
+                    )
+                    .arg(
+                        Arg::with_name("password")
+                        .short("p")
+                        .long("password")
+                        .help("Your default password for **ALL** files")
                         .takes_value(true)
                     )
                     .arg(
                         Arg::with_name("decrypt")
                         .short("d")
                         .help("Decrypt files, encrypt by default")
-                    )
-                    .arg(
-                        Arg::with_name("password")
-                        .short("p")
-                        .help("Your default password for **ALL** files")
                     )
                     .get_matches();
 
@@ -63,9 +68,9 @@ fn main() -> Result<(), std::io::Error> {
                 format!("{}.enc", input_file)
             }
         } else {
-            let (x, y ) = match encrypt {
+            let (x, y) = match encrypt {
                 true => ("unen", "encrypted"),
-                false => ("encrypted", "unen")
+                false => ("encrypted", "unen"),
             };
             String::from(str::replace(&file, x, y))
         };

@@ -1,6 +1,6 @@
 [package]
 name = "file-encrypter"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Jytesh <44925963+Jytesh@users.noreply.github.com>"]
 edition = "2018"
 
@@ -8,5 +8,6 @@ edition = "2018"
 
 [dependencies]
 clap = "2.33.3"
+dialoguer = "0.8.0"
 orion = "0.16.0"
 safe_crypto = "0.8.0"
