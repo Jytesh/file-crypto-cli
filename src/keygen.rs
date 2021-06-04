@@ -2,15 +2,13 @@ use openssl::pkey::{PKey, Private};
 use openssl::rsa::Rsa;
 use openssl::symm::Cipher;
 use std::fs::write;
-use std::io::stdin;
+
+use super::utils;
 
 pub fn keygen() {
     let pair = generate_pair();
-    let mut passphrase = String::new();
-    println!("Enter the desired password!");
-    stdin().read_line(&mut passphrase).unwrap();
-    let passphrase = passphrase.trim();
 
+    let passphrase = utils::getpass();
     println!("Your passphrase is {}", passphrase);
 
     let priv_key: Vec<u8> = pair
