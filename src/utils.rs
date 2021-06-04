@@ -21,14 +21,14 @@ pub fn getpass() -> String {
     return String::from(passphrase);
 }
 
-pub fn encrypt(input: String, output: String, password: String) -> Result<(), std::io::Error> {
+pub fn encrypt(input: String, output: String, password: &String) -> Result<(), std::io::Error> {
     let read_string = fs::read(input)?;
     let ciphertext = crypto::enrypt_string(read_string, password).unwrap();
     write(output, ciphertext)?;
     Ok(())
 }
 
-pub fn decrypt(input: String, output: String, password: String) -> Result<(), std::io::Error> {
+pub fn decrypt(input: String, output: String, password: &String) -> Result<(), std::io::Error> {
     let read_string = fs::read(input)?;
     let decrypted = crypto::decrypt_cipherstring(read_string, password).unwrap();
     write(output, decrypted)?;

@@ -56,13 +56,15 @@ fn main() -> Result<(), std::io::Error> {
         utils::decrypt
     };
 
-    for file in files {
-        let pass = match password {
+    let pass = match password {
             Some(x) => String::from(x),
             None => utils::getpass(),
         };
+    
+    for file in files {
+        
         let output = if let Some(input_file) = matches.value_of("input") {
-            if let Some(output_file) = matches.value_of("input") {
+            if let Some(output_file) = matches.value_of("output") {
                 String::from(output_file)
             } else {
                 format!("{}.enc", input_file)
@@ -75,7 +77,7 @@ fn main() -> Result<(), std::io::Error> {
             String::from(str::replace(&file, x, y))
         };
 
-        operation(file, output.to_string(), pass)?;
+        operation(file, output.to_string(), &pass)?;
     }
     Ok(())
 }

@@ -4,7 +4,7 @@ use orion::kdf;
 
 pub fn enrypt_string(
     string: Vec<u8>,
-    password: String,
+    password: &String,
 ) -> Result<Vec<u8>, orion::errors::UnknownCryptoError> {
     let passphrase = stretch_passphrase(password);
     let ciphertext =
@@ -15,7 +15,7 @@ pub fn enrypt_string(
 
 pub fn decrypt_cipherstring(
     cipherstring: Vec<u8>,
-    password: String,
+    password: &String,
 ) -> Result<Vec<u8>, orion::errors::UnknownCryptoError> {
     let (salt, cipherstring) = cipherstring.split_at(16);
     let passphrase = stretch_passphrase_with_salt(password, salt);
@@ -26,7 +26,7 @@ struct KeySalt {
     salt: kdf::Salt,
 }
 
-fn stretch_passphrase(passphrase: String) -> KeySalt {
+fn stretch_passphrase(passphrase: &String) -> KeySalt {
     let user_password = kdf::Password::from_slice(passphrase.as_bytes()).unwrap();
     let salt = kdf::Salt::default();
 
@@ -34,7 +34,7 @@ fn stretch_passphrase(passphrase: String) -> KeySalt {
     return KeySalt { key, salt };
 }
 
-fn stretch_passphrase_with_salt(passphrase: String, salt: &[u8]) -> crypto::SecretKey {
+fn stretch_passphrase_with_salt(passphrase: &String, salt: &[u8]) -> crypto::SecretKey {
     let salt = kdf::Salt::from_slice(salt).unwrap();
     let user_password = kdf::Password::from_slice(passphrase.as_bytes()).unwrap();
     kdf::derive_key(&user_password, &salt, 3, 1 << 16, 32).unwrap()
