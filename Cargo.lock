@@ -115,7 +115,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "70ec9f20e8cd0badcd280ad9be817f0799fe27c45301d096a7e28c9244ad3ace"
 
 [[package]]
-name = "file-encrypter"
+name = "file-crypto"
 version = "0.3.0"
 dependencies = [
  "clap",

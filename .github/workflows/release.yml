@@ -15,14 +15,14 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            artifact_name: file-encrypter
-            asset_name: file-encrypter-linux
+            artifact_name: file-crypto
+            asset_name: file-crypto-linux
           - os: windows-latest
-            artifact_name: file-encrypter.exe
-            asset_name: file-encrypter-windows.exe
+            artifact_name: file-crypto.exe
+            asset_name: file-crypto-windows.exe
           - os: macos-latest
-            artifact_name: file-encrypter
-            asset_name: file-encrypter-macos
+            artifact_name: file-crypto
+            asset_name: file-crypto-macos
 
     steps:
     - uses: actions/checkout@v2

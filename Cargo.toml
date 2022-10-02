@@ -1,5 +1,5 @@
 [package]
-name = "file-encrypter"
+name = "file-crypto"
 version = "0.3.0"
 authors = ["Jytesh <44925963+Jytesh@users.noreply.github.com>"]
 edition = "2018"
