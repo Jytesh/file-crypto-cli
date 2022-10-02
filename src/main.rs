@@ -1,83 +1,93 @@
-use clap::{App, Arg};
+use clap::{Parser, Subcommand};
 
 mod crypto;
 mod utils;
 mod ux;
 
-fn main() -> Result<(), std::io::Error> {
-    let matches = App::new("Rust File Crypto")
-                    .version("0.2.1")
-                    .author("Jytesh")
-                    .about("Used to encrypt, decrypt files.")
-                    .arg(
-                        Arg::with_name("input")
-                        .short("i")
-                        .long("input")
-                        .help("Input file to encrypt or decrypt, will encrypt or decrypt all files in unen/encrypted if not provided")
-                        .takes_value(true)
-                        )
-                    .arg(
-                        Arg::with_name("output")
-                        .short("o")
-                        .long("output")
-                        .help("Output file , will generate from input file if not provided")
-                        .takes_value(true)
-                    )
-                    .arg(
-                        Arg::with_name("password")
-                        .short("p")
-                        .long("password")
-                        .help("Your default password for **ALL** files")
-                        .takes_value(true)
-                    )
-                    .arg(
-                        Arg::with_name("decrypt")
-                        .short("d")
-                        .help("Decrypt files, encrypt by default")
-                    )
-                    .get_matches();
+#[derive(Parser)]
+#[command(version, author, about)]
+#[command(next_line_help = true)]
+struct Cli {
+    /// Input file
+    // #[arg(long, short)]
+    // input: String,
 
-    let encrypt = !matches.is_present("decrypt");
-    let password = matches.value_of("password");
-    let dir = match encrypt {
-        true => "unen",
-        false => "encrypted",
+    /// Output file, defaults to appending/replacing .enc/.unenc to input file
+    #[arg(long, short)]
+    output: Option<String>,
+
+    /// Optional password to use
+    #[arg(long, short)]
+    password: Option<String>,
+
+    /// Display logging information
+    #[arg(short, long, action = clap::ArgAction::Count)]
+    verbose: u8,
+
+    #[command(subcommand)]
+    commands: Commands,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    Encrypt {
+        /// The file to encrypt
+        input: String,
+    },
+    Decrypt {
+        /// The file to decrypt
+        input: String,
+    },
+}
+
+fn main() -> Result<(), std::io::Error> {
+    let cli = Cli::parse();
+    let (encrypt, input_file) = match cli.commands {
+        Commands::Encrypt { input } => (true, input),
+        Commands::Decrypt { input } => (false, input),
     };
-    let files: Vec<String> = if let Some(input_file) = matches.value_of("input") {
-        vec![String::from(input_file)]
-    } else {
-        let read_dir = utils::readdir(format!("./{}", dir))?;
-        read_dir
-    };
-    println!("{:?}", files);
+
     let operation = if encrypt == true {
         utils::encrypt
     } else {
         utils::decrypt
     };
 
-    let pass = match password {
-            Some(x) => String::from(x),
-            None => utils::getpass(),
-        };
-    
-    for file in files {
-        
-        let output = if let Some(input_file) = matches.value_of("input") {
-            if let Some(output_file) = matches.value_of("output") {
-                String::from(output_file)
-            } else {
-                format!("{}.enc", input_file)
-            }
-        } else {
-            let (x, y) = match encrypt {
-                true => ("unen", "encrypted"),
-                false => ("encrypted", "unen"),
-            };
-            String::from(str::replace(&file, x, y))
-        };
+    let password = match cli.password {
+        Some(x) => String::from(x),
+        None => utils::getpass(),
+    };
 
-        operation(file, output.to_string(), &pass)?;
-    }
+    let output = if let Some(output_file) = cli.output {
+        output_file
+    } else {
+        let (x, y) = match encrypt {
+            true => ("unenc", "enc"),
+            false => ("enc", "unenc"),
+        };
+        let input_path = input_file.clone();
+        let mut input_path = input_path.split('/').collect::<Vec<&str>>();
+        let input_file_name = input_path.remove(input_path.len() - 1);
+
+        let output_file_name = if input_file_name.contains(x) {
+            input_file_name.replace(x, y).to_string()
+        } else {
+            format!("{}.{}", input_file_name, y)
+        };
+        
+        input_path.push(&output_file_name);
+        input_path.join("/")
+    };
+
+    println!(
+        "Input: {}\nOutput: {}\nOperation: {}",
+        input_file,
+        output,
+        match encrypt {
+            true => "Encrypt",
+            false => "Decrypt",
+        }
+    );
+    operation(input_file, output.to_string(), &password)?;
     Ok(())
 }

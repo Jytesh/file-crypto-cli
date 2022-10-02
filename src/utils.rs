@@ -1,22 +1,11 @@
-use std::fs::{read_dir, write};
+use std::fs::write;
 
 use super::crypto;
 use super::ux;
 use std::fs;
 
-pub fn readdir(path: String) -> Result<Vec<String>, std::io::Error> {
-    let mut array = vec![];
-    let entries = read_dir(path)?;
-    for path in entries {
-        let file = path?.path();
-        let file = file.display();
-        array.push(format!("{}", file))
-    }
-    return Ok(array);
-}
-
 pub fn getpass() -> String {
-    let passphrase = ux::pass("Enter your password").unwrap();
+    let passphrase = ux::input("Enter your password").unwrap();
     let passphrase = passphrase.trim();
     return String::from(passphrase);
 }
